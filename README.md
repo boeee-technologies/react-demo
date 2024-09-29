@@ -48,3 +48,7 @@ pnpm install react react-dom
 
 Change directory to the app folder.
 To start app : pnpm start
+
+### Setup Material UI
+Follow the instructions on from the URL
+https://mui.com/material-ui/getting-started/installation/
