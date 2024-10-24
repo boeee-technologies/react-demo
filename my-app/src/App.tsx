@@ -16,10 +16,10 @@ function App() {
   return (
     <div className="App">
       <BrowserRouter>
-        <Container>
+        <main>
           <HeaderBar />
           <RouterNav />
-        </Container>
+        </main>
         <Footer />
       </BrowserRouter>
     </div>
