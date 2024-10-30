@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Typography } from '@mui/material';
+import { Button, Grid, Typography } from '@mui/material';
 import { Box, styled } from "@mui/material";
 import { purple, yellow } from '@mui/material/colors';
 
@@ -13,7 +13,7 @@ const ResetButton = styled(Button)(({ theme }) => ({
 
 const CtrButton = styled(Button)(({ theme }) => ({
   ".MuiButton-root": {
-    border: '1px solid green',
+    border: '1px solid red',
     height: '75', width: '75',
     bgcolor: yellow,
   }
@@ -39,22 +39,41 @@ const BoardGame: React.FC<BoardGameProps> = ({ onSelectSquare, board: board }) =
     //const item = boards.map(row => [...row]); // Deep copy of the board
   }
   return (
-    <div>
-      {board.map((row, rowIndex) => (
-        <Box key={rowIndex}>
-          {row.map((col, colIndex) => (
-            <CtrButton variant="contained" color="success" size='large'
-              onClick={() => onSelectSquare(rowIndex, colIndex)}
-              key={`${rowIndex}-${colIndex}`}
-              disabled={col != null}>{col}</CtrButton>
-          ))}
-        </Box>
-      ))
-      }
-      <Box>
-        <ResetButton variant="contained" onClick={handleReset}>Reset</ResetButton>
-      </Box>
-    </div>
+    <Box
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
+      justifyContent="center"
+      sx={{ padding: '16px' }}
+    >
+      {/* Tic-Tac-Toe Board */}
+      <Grid container spacing={2} justifyContent="center">
+        {board.map((row, rowIndex) => (
+          <Grid container item spacing={1} key={rowIndex} justifyContent="center">
+            {row.map((col, colIndex) => (
+              <Grid item key={`${rowIndex}-${colIndex}`}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  size="large"
+                  onClick={() => onSelectSquare(rowIndex, colIndex)}
+                  disabled={col != null}
+                  sx={{
+                    width: '100px',
+                    height: '100px',
+                    fontSize: '24px',
+                    fontWeight: 'bold',
+                    borderRadius: '8px',
+                  }}
+                >
+                  {col}
+                </Button>
+              </Grid>
+            ))}
+          </Grid>
+        ))}
+      </Grid>
+    </Box>
   );
 };
 export default BoardGame;
