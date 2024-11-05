@@ -1,5 +1,5 @@
 import { Input, styled, SvgIcon } from "@mui/material";
-import { SetStateAction, useState } from "react";
+import { KeyboardEvent, SetStateAction, useState } from "react";
 import { red } from "@mui/material/colors";
 import { Edit as EditIcon, SaveAsOutlined as SaveAsOutlinedIcon } from '@mui/icons-material';
 
@@ -34,25 +34,38 @@ const SaveAsOutlinedIconnElement = styled(SaveAsOutlinedIcon)(({ theme }) => ({
 }));
 
 
-export function Players({ name, symbol, isActive, onPlayerNameChange }: PlayerProps) {
+export function Players({ name, symbol, onPlayerNameChange }: PlayerProps) {
     const [isEdition, setisEdition] = useState(false);
-    const [playerName, setNewName] = useState(name);
+    const [playerName, setPlayerName] = useState(name);
+
 
     function handleEditClick() {
         setisEdition((editing) => !editing);
-        if (isEdition) {
-            onPlayerNameChange(name, symbol);
-        }
     }
 
-    function handleOnChange(event: { target: { value: SetStateAction<string>; }; }) {
-        setNewName(event.target.value);
+    function handleOnSavePlayerName(playerName: string, symbol: string) {
+        onPlayerNameChange(playerName, symbol);
+        setisEdition((editing) => !editing);
     }
+
+    const handleKeyDown = (e: KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        if (e.key === 'Enter') handleOnSavePlayerName(playerName, symbol);
+        else if (e.key === 'Escape') handleEditClick();
+    };
+
     let playerNameLable = <><span>{playerName}</span> <EditIconElement onClick={handleEditClick} /> </>;
 
 
     if (isEdition) {
-        playerNameLable = <> <InputElement aria-label="Name" placeholder="Type your name..." value={playerName} required onChange={handleOnChange} /> <SaveAsOutlinedIconnElement onClick={handleEditClick} /> </>;
+        playerNameLable = <> <InputElement
+            aria-label="Name"
+            placeholder="Type your name..."
+            onChange={(e) => setPlayerName(e.target.value)}
+            value={playerName}
+            required
+            onKeyDown={(e) => handleKeyDown(e)}
+        />
+            <SaveAsOutlinedIconnElement onClick={() => handleOnSavePlayerName(playerName, symbol)} /> </>;
     }
 
     return (

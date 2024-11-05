@@ -51,7 +51,7 @@ export default function Tik() {
     const [gameTurns, setGameTurns] = useState<Turn[]>([]);
     const activePlayer = deriveActivePlayer(gameTurns);
     const [showDialog, setShowDialog] = useState(false);
-    const [PlayersList, setPlayers] = useState<PlayersListProps[]>([
+    const [playersList, setPlayersList] = useState<PlayersListProps[]>([
         { Symbol: 'X', PlayerName: 'Player 1' },
         { Symbol: 'O', PlayerName: 'Player 2' }
     ]);
@@ -65,7 +65,7 @@ export default function Tik() {
     }
 
     const playerName = (symbol: string | undefined) => {
-        return PlayersList.find(player => player.Symbol === symbol)?.PlayerName;
+        return playersList.find(player => player.Symbol === symbol)?.PlayerName;
     }
 
     let winnerSymbol;
@@ -98,21 +98,23 @@ export default function Tik() {
         setGameTurns([]);
         setShowDialog(false);
     }
-    function handlePlayerNameChange(newName: string, symbol: string) {
-        setPlayers(prevPlayers =>
-            prevPlayers.map(player =>
-                player.Symbol === symbol
-                    ? { ...player, PlayerName: newName }
-                    : player
-            )
-        );
+    const handlePlayerNameChange = (newName: string, symbol: string) => {
+        setPlayersList(prevPlayers => {
+            const updatedPlayers = prevPlayers.map(player =>
+            (player.Symbol.toUpperCase() === symbol.toUpperCase()
+                ? { ...player, PlayerName: newName }
+                : player)
+            );
+            console.log(updatedPlayers);
+            return updatedPlayers; // This ensures a new array is returned
+        });
     }
 
     return (
         <>
             <Typography component="div"    >
-                <PlayerComp name={PlayersList[0].PlayerName} onPlayerNameChange={handlePlayerNameChange} symbol={PlayersList[0].Symbol} isActive={activePlayer === PlayersList[0].Symbol} />
-                <PlayerComp name={PlayersList[1].PlayerName} onPlayerNameChange={handlePlayerNameChange} symbol={PlayersList[1].Symbol} isActive={activePlayer === PlayersList[1].Symbol} />
+                <PlayerComp name={playersList[0].PlayerName} onPlayerNameChange={handlePlayerNameChange} symbol={playersList[0].Symbol} isActive={activePlayer === playersList[0].Symbol} />
+                <PlayerComp name={playersList[1].PlayerName} onPlayerNameChange={handlePlayerNameChange} symbol={playersList[1].Symbol} isActive={activePlayer === playersList[1].Symbol} />
             </Typography>
             {(winnerSymbol || isDraw) &&
                 <GameOver
